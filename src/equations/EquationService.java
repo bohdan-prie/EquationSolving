@@ -44,9 +44,10 @@ public class EquationService {
             }
 
             boolean end = true;
+            System.out.printf("Iteration = %d \n", i);
             for (int j = 0; j < totalX.length; j++) {
                 BigDecimal e = BigDecimal.valueOf(Math.abs(totalX[j] - pastTotalX[j])).setScale(4, RoundingMode.FLOOR);
-                System.out.println(String.format("Iteration = %d \t x%d = %.5f", i, j + 1, totalX[j]) + "\t accuracy = " + e);
+                System.out.println(String.format("\t x%d = %.5f", j + 1, totalX[j]) + "\t accuracy = " + e);
                 if (result[j] == 0 && totalX[j] == 0) {
                     continue;
                 }
@@ -87,9 +88,10 @@ public class EquationService {
             }
 
             boolean end = true;
+            System.out.printf("Iteration = %d \n", i);
             for (int j = 0; j < totalX.length; j++) {
                 BigDecimal e = BigDecimal.valueOf(Math.abs(totalX[j] - pastTotalX[j])).setScale(4, RoundingMode.FLOOR);
-                System.out.println(String.format("Iteration = %d \t x%d = %.5f", i,  j + 1, totalX[j]) + "\t accuracy = " + e);
+                System.out.println(String.format(" \t x%d = %.5f",  j + 1, totalX[j]) + "\t accuracy = " + e);
                 if (result[j] == 0 && totalX[j] == 0) {
                     continue;
                 }
