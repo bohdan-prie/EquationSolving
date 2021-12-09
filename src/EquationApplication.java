@@ -14,14 +14,14 @@ public class EquationApplication extends Application {
         EquationService service = new EquationService();
 
         double[][] matrix = new double[][]{
-                { 4, -1, 1 },
                 { 2, 6, -1 },
+                { 4, -1, 1 },
                 { 1, 2, -3 }
                 /*{ 6, -1, 1 },
                 { 1, 3, -1 },
                 { -1, -3, 5 }*/
         };
-        double[] result = new double[]/*{ 7, 2, 6 }*/{ 4, 7, 0 };
+        double[] result = new double[]/*{ 7, 2, 6 }*/{ 7, 4, 0 };
 
         service.solveEquation(matrix, result, Methods.GAUSS_SEIDEL);
     }

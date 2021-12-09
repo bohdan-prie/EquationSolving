@@ -7,7 +7,7 @@ import java.util.Arrays;
 public class EquationService {
 
     public void solveEquation(double[][] data, double[] result, Methods method) {
-        if (method == null)
+        if (method == null || data == null || result == null)
             return;
         switch (method) {
             case GAUSS_SEIDEL:
@@ -20,7 +20,8 @@ public class EquationService {
     }
 
     private void solveByIteration(double[][] data, double[] result) {
-        if (data.length != result.length) {
+        this.sort(data, result);
+        if (data.length != result.length && data.length != data[0].length) {
             throw new IllegalArgumentException("Data are not consistent");
         }
         BigDecimal accuracy = new BigDecimal("0.001");
@@ -62,6 +63,7 @@ public class EquationService {
     }
 
     private void solveByGaussSeidel(double[][] data, double[] result) {
+        this.sort(data, result);
         if (data.length != result.length) {
             throw new IllegalArgumentException("Data are not consistent");
         }
@@ -98,6 +100,28 @@ public class EquationService {
             System.out.println();
             if (end) {
                 break;
+            }
+        }
+    }
+
+    private void sort(double[][] data, double[] result) {
+        for (int j = 0; j < data.length; j++) {
+            double max = Math.abs(data[j][0]);
+            int maxIndex = 0;
+            for (int i = 0; i < data.length; i++) {
+                if (Math.abs(data[i][j]) > max) {
+                    max = Math.abs(data[i][j]);
+                    maxIndex = i;
+                }
+            }
+            if (j != maxIndex) {
+                double[] temp = data[j];
+                data[j] = data[maxIndex];
+                data[maxIndex] = temp;
+
+                double temp1 = result[j];
+                result[j] = result[maxIndex];
+                result[maxIndex] = temp1;
             }
         }
     }
