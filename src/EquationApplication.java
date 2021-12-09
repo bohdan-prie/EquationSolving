@@ -1,29 +1,28 @@
 import equations.EquationService;
+import equations.Methods;
 import javafx.application.Application;
-        import javafx.fxml.FXML;
-        import javafx.fxml.FXMLLoader;
-        import javafx.scene.Parent;
-        import javafx.scene.Scene;
-        import javafx.stage.Stage;
-
-        import java.io.IOException;
-        import java.util.Objects;
+import javafx.fxml.FXML;
+import javafx.stage.Stage;
 
 public class EquationApplication extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    EquationService service = new EquationService();
 
     @FXML
     public void start(Stage primaryStage) {
+        EquationService service = new EquationService();
+
         double[][] matrix = new double[][]{
                 { 4, -1, 1 },
                 { 2, 6, -1 },
                 { 1, 2, -3 }
+                /*{ 6, -1, 1 },
+                { 1, 3, -1 },
+                { -1, -3, 5 }*/
         };
-        double[] result = new double[]{ 4, 7, 0 };
+        double[] result = new double[]/*{ 7, 2, 6 }*/{ 4, 7, 0 };
 
-        service.solveByGaussSeidel(matrix, result);
+        service.solveEquation(matrix, result, Methods.GAUSS_SEIDEL);
     }
 }
