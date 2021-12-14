@@ -16,6 +16,34 @@ public class EquationService {
             case ITERATION:
                 this.solveByIteration(data, result);
                 break;
+            case DIRECT:
+                this.solveByDirect(data, result);
+                break;
+        }
+    }
+
+    private void solveByDirect(double[][] data, double[] result) {
+        //this.sort(data, result);
+
+        if (data.length != result.length) {
+            throw new IllegalArgumentException("Data are not consistent");
+        }
+
+        for (int i = 1; i < data.length; i++) {
+            for (int k = i; k < data.length; k++) {
+                double numToDivideFor = data[k][i - 1] / data[i - 1][i - 1];
+                for (int j = 0; j < data.length; j++) {
+                    data[k][j] = data[k][j] - data[i - 1][j] * numToDivideFor;
+                }
+                result[k] = result[k] - result[i - 1] * numToDivideFor;
+            }
+        }
+
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data.length; j++) {
+                System.out.print(data[i][j] + "   ");
+            }
+            System.out.println(result[i]);
         }
     }
 
@@ -91,7 +119,7 @@ public class EquationService {
             System.out.printf("Iteration = %d \n", i);
             for (int j = 0; j < totalX.length; j++) {
                 BigDecimal e = BigDecimal.valueOf(Math.abs(totalX[j] - pastTotalX[j])).setScale(4, RoundingMode.FLOOR);
-                System.out.println(String.format(" \t x%d = %.5f",  j + 1, totalX[j]) + "\t accuracy = " + e);
+                System.out.println(String.format(" \t x%d = %.5f", j + 1, totalX[j]) + "\t accuracy = " + e);
                 if (result[j] == 0 && totalX[j] == 0) {
                     continue;
                 }
