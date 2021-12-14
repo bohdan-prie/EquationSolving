@@ -1,25 +1,19 @@
 package equations;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.util.Objects;
+import java.math.BigDecimal;
 
 public class EquationController {
-    private final static float GRID_SIZE = 800F;
+    private final static float GRID_SIZE = 400F;
     private final EquationService service;
     private int size;
     private TextField[][] gridFields;
 
+    @FXML private TextField accuracy;
     @FXML private GridPane gridMatrix;
     @FXML private TextField matrixSizeInput;
 
@@ -58,21 +52,40 @@ public class EquationController {
 
         gridMatrix.setPrefWidth(GRID_SIZE);
         gridMatrix.setPrefHeight(GRID_SIZE);
+        double preferredSize = GRID_SIZE / (size + 1);
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size + 1; j++) {
                 TextField textField = new TextField();
                 gridFields[i][j] = textField;
+                textField.setPrefSize(preferredSize, preferredSize);
                 gridMatrix.add(textField, j, i);
             }
         }
     }
 
     @FXML
+    void solveByDirect() {
+        double[][] data = new double[size][size];
+        double[] result = new double[size];
+        try {
+            this.prepareData(data, result);
+        } catch (NumberFormatException e) {
+            return;
+        }
+
+        service.solveEquation(data, result, Methods.DIRECT);
+    }
+
+    @FXML
     void solveByIteration() {
         double[][] data = new double[size][size];
         double[] result = new double[size];
-        this.prepareData(data, result);
+        try {
+            this.prepareData(data, result);
+        } catch (NumberFormatException e) {
+            return;
+        }
 
         service.solveEquation(data, result, Methods.ITERATION);
     }
@@ -81,29 +94,32 @@ public class EquationController {
     void solveByGaussSeidel() {
         double[][] data = new double[size][size];
         double[] result = new double[size];
-        this.prepareData(data, result);
+        try {
+            this.prepareData(data, result);
+        } catch (NumberFormatException e) {
+            return;
+        }
 
         service.solveEquation(data, result, Methods.GAUSS_SEIDEL);
     }
 
-    private void loadScreen() {
+    @FXML
+    void setAccuracy() {
+        double value;
         try {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/scenes/InfectionScene.fxml")));
-            Scene scene = new Scene(root);
-            Stage primaryStage = (Stage) matrixSizeInput.getScene().getWindow();
-            primaryStage.setResizable(false);
-            primaryStage.setScene(scene);
-            primaryStage.show();
-        } catch (IOException e) {
+               value = Double.parseDouble(accuracy.getText());
+        } catch (NumberFormatException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Some error");
-            alert.setContentText("Some error happened");
+            alert.setTitle("Number format error");
+            alert.setContentText("Number is not valid, try again");
 
             alert.showAndWait();
+            throw e;
         }
+        service.setAccuracy(BigDecimal.valueOf(value));
     }
 
-    private void prepareData(double[][] data, double[] result) {
+    private void prepareData(double[][] data, double[] result) throws NumberFormatException {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size + 1; j++) {
                 TextField textField = gridFields[i][j];
@@ -121,7 +137,7 @@ public class EquationController {
                     alert.setContentText("Number is not valid, try again");
 
                     alert.showAndWait();
-                    return;
+                    throw e;
                 }
             }
         }

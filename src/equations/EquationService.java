@@ -6,6 +6,12 @@ import java.util.Arrays;
 
 public class EquationService {
 
+    private BigDecimal accuracy = new BigDecimal("0.001");
+
+    public void setAccuracy(BigDecimal accuracy) {
+        this.accuracy = accuracy;
+    }
+
     public void solveEquation(double[][] data, double[] result, Methods method) {
         if (method == null || data == null || result == null)
             return;
@@ -23,7 +29,7 @@ public class EquationService {
     }
 
     private void solveByDirect(double[][] data, double[] result) {
-        //this.sort(data, result);
+        this.sort(data, result);
 
         if (data.length != result.length) {
             throw new IllegalArgumentException("Data are not consistent");
@@ -33,17 +39,41 @@ public class EquationService {
             for (int k = i; k < data.length; k++) {
                 double numToDivideFor = data[k][i - 1] / data[i - 1][i - 1];
                 for (int j = 0; j < data.length; j++) {
-                    data[k][j] = data[k][j] - data[i - 1][j] * numToDivideFor;
+                    data[k][j] = BigDecimal.valueOf(data[k][j] - data[i - 1][j] * numToDivideFor)
+                            .setScale(2, RoundingMode.HALF_UP)
+                            .doubleValue();
                 }
-                result[k] = result[k] - result[i - 1] * numToDivideFor;
+                result[k] = BigDecimal.valueOf(result[k] - result[i - 1] * numToDivideFor)
+                        .setScale(2, RoundingMode.HALF_UP)
+                        .doubleValue();
             }
         }
 
+        double[] xResults = new double[result.length];
+
+        for (int i = result.length - 1; i >= 0; i--) {
+            double sumAfter = 0;
+
+            for (int j = i; j < result.length; j++) {
+                if (j == i) {
+                    continue;
+                }
+                sumAfter += data[i][j] * xResults[j];
+            }
+            xResults[i] = (result[i] - sumAfter) / data[i][i];
+        }
+
+        for (int i = 0; i < data.length; i++) {
+            System.out.print("    Ax" +  (i + 1));
+        }
+        System.out.print("    D" + "     result");
+        System.out.println();
+
         for (int i = 0; i < data.length; i++) {
             for (int j = 0; j < data.length; j++) {
-                System.out.print(data[i][j] + "   ");
+                System.out.printf("%7.3f", data[i][j]);
             }
-            System.out.println(result[i]);
+            System.out.printf("%7.3f   x%d = %4.3f%n", result[i], (i + 1), xResults[i]);
         }
     }
 
@@ -52,7 +82,6 @@ public class EquationService {
         if (data.length != result.length && data.length != data[0].length) {
             throw new IllegalArgumentException("Data are not consistent");
         }
-        BigDecimal accuracy = new BigDecimal("0.001");
 
         double[] totalX = new double[data[0].length];
 
@@ -96,7 +125,6 @@ public class EquationService {
         if (data.length != result.length) {
             throw new IllegalArgumentException("Data are not consistent");
         }
-        BigDecimal accuracy = new BigDecimal("0.001");
 
         double[] totalX = new double[result.length];
 

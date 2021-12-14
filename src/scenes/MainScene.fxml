@@ -3,18 +3,16 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="540.0" prefWidth="669.0" xmlns="http://javafx.com/javafx/11.0.2"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="equations.EquationController">
-    <GridPane fx:id="gridMatrix" layoutX="18.0" layoutY="166.0" maxHeight="-Infinity" maxWidth="-Infinity"
-              minHeight="-Infinity" minWidth="-Infinity" prefHeight="258.0" prefWidth="292.0">
+<AnchorPane prefHeight="540.0" prefWidth="507.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="equations.EquationController">
+    <GridPane fx:id="gridMatrix" layoutX="15.0" layoutY="176.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="258.0" prefWidth="292.0">
     </GridPane>
-    <Button layoutX="16.0" layoutY="103.0" mnemonicParsing="false" onAction="#enterData" prefHeight="26.0"
-            prefWidth="208.0" text="Init data"/>
-    <TextField fx:id="matrixSizeInput" layoutX="17.0" layoutY="56.0" prefHeight="32.0" prefWidth="208.0"/>
-    <Label alignment="CENTER" layoutX="28.0" layoutY="15.0" prefHeight="32.0" prefWidth="193.0"
-           text="Write size of matrix"/>
-    <Button layoutX="14.0" layoutY="486.0" mnemonicParsing="false" onAction="#solveByIteration" prefHeight="32.0" prefWidth="120.0"
-            text="Iteration"/>
-    <Button layoutX="170.0" layoutY="486.0" mnemonicParsing="false" onAction="#solveByGaussSeidel" prefHeight="32.0" prefWidth="130.0"
-            text="Gauss Seidel"/>
+    <Button layoutX="16.0" layoutY="103.0" mnemonicParsing="false" onAction="#enterData" prefHeight="26.0" prefWidth="208.0" text="Init data" />
+    <Button layoutX="277.0" layoutY="103.0" mnemonicParsing="false" onAction="#setAccuracy" prefHeight="26.0" prefWidth="208.0" text="Set accuracy" />
+    <TextField fx:id="matrixSizeInput" layoutX="17.0" layoutY="56.0" prefHeight="32.0" prefWidth="208.0" />
+    <TextField fx:id="accuracy" layoutX="277.0" layoutY="54.0" prefHeight="32.0" prefWidth="208.0" />
+    <Label alignment="CENTER" layoutX="28.0" layoutY="15.0" prefHeight="32.0" prefWidth="193.0" text="Write size of matrix" />
+    <Label alignment="CENTER" layoutX="289.0" layoutY="15.0" prefHeight="32.0" prefWidth="193.0" text="Write accuracy" />
+    <Button layoutX="14.0" layoutY="486.0" mnemonicParsing="false" onAction="#solveByIteration" prefHeight="32.0" prefWidth="120.0" text="Iteration" />
+    <Button layoutX="170.0" layoutY="486.0" mnemonicParsing="false" onAction="#solveByGaussSeidel" prefHeight="32.0" prefWidth="130.0" text="Gauss Seidel" />
+    <Button layoutX="336.0" layoutY="486.0" mnemonicParsing="false" onAction="#solveByDirect" prefHeight="32.0" prefWidth="130.0" text="Direct" />
 </AnchorPane>
