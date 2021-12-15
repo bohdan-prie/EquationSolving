@@ -36,6 +36,12 @@ public class EquationService {
         }
     }
 
+    /**
+     * Method solves given equation by direct method
+     * @param data - given matrix
+     * @param result - given result
+     * @param writeTo - where to write result
+     */
     private void solveByDirect(double[][] data, double[] result, WriteTo writeTo) {
         this.sort(data, result);
 
@@ -90,6 +96,12 @@ public class EquationService {
         }
     }
 
+    /**
+     * Method solves given equation by iteration method
+     * @param data - given matrix
+     * @param result - given result
+     * @param writeTo - where to write result
+     */
     private void solveByIteration(double[][] data, double[] result, WriteTo writeTo) {
         this.sort(data, result);
         if (data.length != result.length && data.length != data[0].length) {
@@ -103,6 +115,9 @@ public class EquationService {
             for (int j = 0; j < result.length; j++) {
                 double totalResult = result[j];
 
+                /*
+                    Calculate all data before and after current number
+                 */
                 for (int k = 0; k < result.length; k++) {
                     if (k == j) {
                         continue;
@@ -125,11 +140,17 @@ public class EquationService {
                 if (result[j] == 0 && totalX[j] == 0) {
                     continue;
                 }
+                /*
+                    check if current accuracy is bigger than given
+                    if yes, continue evaluating equation
+                 */
                 if (e.compareTo(accuracy) > 0) {
                     end = false;
                 }
             }
-            System.out.println();
+            if (writeTo == WriteTo.CONSOLE) {
+                System.out.println();
+            }
 
             if (end) {
                 break;
@@ -137,9 +158,15 @@ public class EquationService {
         }
     }
 
+    /**
+     * Method solves given equation by GaussSeidel method
+     * @param data - given matrix
+     * @param result - given result
+     * @param writeTo - where to write result
+     */
     private void solveByGaussSeidel(double[][] data, double[] result, WriteTo writeTo) {
         this.sort(data, result);
-        if (data.length != result.length) {
+        if (data.length != result.length) { // check if matrix and result size are the same
             throw new IllegalArgumentException("Data are not consistent");
         }
 
@@ -150,6 +177,9 @@ public class EquationService {
             for (int j = 0; j < result.length; j++) {
                 double totalResult = result[j];
 
+                /*
+                    Calculate all data before and after current number
+                 */
                 for (int k = 0; k < result.length; k++) {
                     if (k == j) {
                         continue;
@@ -172,11 +202,17 @@ public class EquationService {
                 if (result[j] == 0 && totalX[j] == 0) {
                     continue;
                 }
+                /*
+                    check if current accuracy is bigger than given
+                    if yes, continue evaluating equation
+                 */
                 if (e.compareTo(accuracy) > 0) {
                     end = false;
                 }
             }
-            System.out.println();
+            if (writeTo == WriteTo.CONSOLE) {
+                System.out.println();
+            }
             if (end) {
                 break;
             }
