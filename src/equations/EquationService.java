@@ -12,23 +12,31 @@ public class EquationService {
         this.accuracy = accuracy;
     }
 
-    public void solveEquation(double[][] data, double[] result, Methods method) {
+    /**
+     * Method decides what method to use to solve given equation and where to print result,
+     * based on given Method param and WriteTo param
+     * @param data - given matrix
+     * @param result - given result array
+     * @param method - how to solve
+     * @param writeTo - where to write result
+     */
+    public void solveEquation(double[][] data, double[] result, Method method, WriteTo writeTo) {
         if (method == null || data == null || result == null)
             return;
         switch (method) {
             case GAUSS_SEIDEL:
-                this.solveByGaussSeidel(data, result);
+                this.solveByGaussSeidel(data, result, writeTo);
                 break;
             case ITERATION:
-                this.solveByIteration(data, result);
+                this.solveByIteration(data, result, writeTo);
                 break;
             case DIRECT:
-                this.solveByDirect(data, result);
+                this.solveByDirect(data, result, writeTo);
                 break;
         }
     }
 
-    private void solveByDirect(double[][] data, double[] result) {
+    private void solveByDirect(double[][] data, double[] result, WriteTo writeTo) {
         this.sort(data, result);
 
         if (data.length != result.length) {
@@ -37,7 +45,10 @@ public class EquationService {
 
         for (int i = 1; i < data.length; i++) {
             for (int k = i; k < data.length; k++) {
-                double numToDivideFor = data[k][i - 1] / data[i - 1][i - 1];
+                double numToDivideFor = 1;
+                if (data[i - 1][i - 1] != 0) {
+                    numToDivideFor = data[k][i - 1] / data[i - 1][i - 1];
+                }
                 for (int j = 0; j < data.length; j++) {
                     data[k][j] = BigDecimal.valueOf(data[k][j] - data[i - 1][j] * numToDivideFor)
                             .setScale(2, RoundingMode.HALF_UP)
@@ -49,7 +60,7 @@ public class EquationService {
             }
         }
 
-        double[] xResults = new double[result.length];
+        double[] totalX = new double[result.length];
 
         for (int i = result.length - 1; i >= 0; i--) {
             double sumAfter = 0;
@@ -58,26 +69,28 @@ public class EquationService {
                 if (j == i) {
                     continue;
                 }
-                sumAfter += data[i][j] * xResults[j];
+                sumAfter += data[i][j] * totalX[j];
             }
-            xResults[i] = (result[i] - sumAfter) / data[i][i];
+            totalX[i] = (result[i] - sumAfter) / data[i][i];
         }
 
-        for (int i = 0; i < data.length; i++) {
-            System.out.print("    Ax" +  (i + 1));
-        }
-        System.out.print("    D" + "     result");
-        System.out.println();
-
-        for (int i = 0; i < data.length; i++) {
-            for (int j = 0; j < data.length; j++) {
-                System.out.printf("%7.3f", data[i][j]);
+        if (writeTo == WriteTo.CONSOLE) {
+            for (int i = 0; i < data.length; i++) {
+                System.out.print("    Ax" + (i + 1));
             }
-            System.out.printf("%7.3f   x%d = %4.3f%n", result[i], (i + 1), xResults[i]);
+            System.out.print("    D" + "     result");
+            System.out.println();
+
+            for (int i = 0; i < data.length; i++) {
+                for (int j = 0; j < data.length; j++) {
+                    System.out.printf("%7.3f", data[i][j]);
+                }
+                System.out.printf("%7.3f   x%d = %4.3f%n", result[i], (i + 1), totalX[i]);
+            }
         }
     }
 
-    private void solveByIteration(double[][] data, double[] result) {
+    private void solveByIteration(double[][] data, double[] result, WriteTo writeTo) {
         this.sort(data, result);
         if (data.length != result.length && data.length != data[0].length) {
             throw new IllegalArgumentException("Data are not consistent");
@@ -101,10 +114,14 @@ public class EquationService {
             }
 
             boolean end = true;
-            System.out.printf("Iteration = %d \n", i);
+            if (writeTo == WriteTo.CONSOLE) {
+                System.out.printf("Iteration = %d \n", i);
+            }
             for (int j = 0; j < totalX.length; j++) {
                 BigDecimal e = BigDecimal.valueOf(Math.abs(totalX[j] - pastTotalX[j])).setScale(4, RoundingMode.FLOOR);
-                System.out.println(String.format("\t x%d = %.5f", j + 1, totalX[j]) + "\t accuracy = " + e);
+                if (writeTo == WriteTo.CONSOLE) {
+                    System.out.println(String.format("\t x%d = %.5f", j + 1, totalX[j]) + "\t accuracy = " + e);
+                }
                 if (result[j] == 0 && totalX[j] == 0) {
                     continue;
                 }
@@ -120,7 +137,7 @@ public class EquationService {
         }
     }
 
-    private void solveByGaussSeidel(double[][] data, double[] result) {
+    private void solveByGaussSeidel(double[][] data, double[] result, WriteTo writeTo) {
         this.sort(data, result);
         if (data.length != result.length) {
             throw new IllegalArgumentException("Data are not consistent");
@@ -144,10 +161,14 @@ public class EquationService {
             }
 
             boolean end = true;
-            System.out.printf("Iteration = %d \n", i);
+            if (writeTo == WriteTo.CONSOLE) {
+                System.out.printf("Iteration = %d \n", i);
+            }
             for (int j = 0; j < totalX.length; j++) {
                 BigDecimal e = BigDecimal.valueOf(Math.abs(totalX[j] - pastTotalX[j])).setScale(4, RoundingMode.FLOOR);
-                System.out.println(String.format(" \t x%d = %.5f", j + 1, totalX[j]) + "\t accuracy = " + e);
+                if (writeTo == WriteTo.CONSOLE) {
+                    System.out.println(String.format("\t x%d = %.5f", j + 1, totalX[j]) + "\t accuracy = " + e);
+                }
                 if (result[j] == 0 && totalX[j] == 0) {
                     continue;
                 }
@@ -162,6 +183,11 @@ public class EquationService {
         }
     }
 
+    /**
+     * Method sorts matrix and result to max elements by main diagonal
+     * @param data - given matrix
+     * @param result - given result
+     */
     private void sort(double[][] data, double[] result) {
         for (int j = 0; j < data.length; j++) {
             double max = Math.abs(data[j][0]);

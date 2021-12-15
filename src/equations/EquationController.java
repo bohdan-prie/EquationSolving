@@ -35,10 +35,10 @@ public class EquationController {
             alert.showAndWait();
             return;
         }
-        if (size <= 2) {
+        if (size <= 2 || size >= 6) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Size is too short error");
-            alert.setContentText("Size is too short, try again");
+            alert.setTitle("Size is not in range error");
+            alert.setContentText("Size is not in range 2..6, try again");
 
             alert.showAndWait();
             return;
@@ -74,7 +74,7 @@ public class EquationController {
             return;
         }
 
-        service.solveEquation(data, result, Methods.DIRECT);
+        service.solveEquation(data, result, Method.DIRECT, WriteTo.FILE);
     }
 
     @FXML
@@ -87,7 +87,7 @@ public class EquationController {
             return;
         }
 
-        service.solveEquation(data, result, Methods.ITERATION);
+        service.solveEquation(data, result, Method.ITERATION, WriteTo.FILE);
     }
 
     @FXML
@@ -100,14 +100,14 @@ public class EquationController {
             return;
         }
 
-        service.solveEquation(data, result, Methods.GAUSS_SEIDEL);
+        service.solveEquation(data, result, Method.GAUSS_SEIDEL, WriteTo.FILE);
     }
 
     @FXML
     void setAccuracy() {
         double value;
         try {
-               value = Double.parseDouble(accuracy.getText());
+            value = Double.parseDouble(accuracy.getText());
         } catch (NumberFormatException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Number format error");

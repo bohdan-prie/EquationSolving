@@ -1,6 +1,6 @@
 package equations;
 
-public enum Methods {
+public enum Method {
     ITERATION,
     GAUSS_SEIDEL,
     DIRECT
